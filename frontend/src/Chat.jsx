@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-
+import { toast , ToastContainer } from "react-toastify";
 
 const addUserSchema = yup.object().shape({
     name: yup.string().required("Name is required"),
@@ -63,7 +63,10 @@ export function Chat() {
     };
 
     const sendMessage = () => {
-        if (!socket || !selectedUser || message.trim() === "") return;
+        if (!socket || !selectedUser || message.trim() === "") {
+            toast.error("Can't send an empty message");
+            return;
+        }
 
         socket.emit("send-message", {
             from: email,
@@ -162,6 +165,7 @@ export function Chat() {
 
     return (
         <>
+        <ToastContainer />
         {
                 addingUser && (
                     <div className="min-h-screen bg-slate-900 flex items-center justify-center">

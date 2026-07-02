@@ -4,11 +4,13 @@ import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom'
+import { ToastContainer , toast } from 'react-toastify'
+
 
 const otpSchema = yup.object().shape({
-  email: yup.string().required("Email is required").required("@gmail.com").email("Enter a valid email"),
-  password: yup.string().required("Password is required").min(8, "Length is atleast of 8 characters").max(12, "Length can't be more than the 12"),
-  otp: yup.string().min(4, "4 digit otp is required").max(4, "4 digit otp is required").optional()
+  // email: yup.string().required("Email is required").required("@gmail.com").email("Enter a valid email"),
+  // password: yup.string().required("Password is required").min(8, "Length is atleast of 8 characters").max(12, "Length can't be more than the 12"),
+  // otp: yup.string().min(4, "4 digit otp is required").max(4, "4 digit otp is required").optional()
 })
 
 const App = () => {
@@ -21,7 +23,6 @@ const App = () => {
   const email = watch("email");
 
   const otpGenerator = async (data) => {
-
     const otpValue = watch("otp");
     console.log("The otp value is : ", otpValue);
 
@@ -42,6 +43,12 @@ const App = () => {
       const data1 = await res.json();
       if (data1.message === "okay") {
         setOtp(true);
+        toast("OTP send to gmail" , {
+          type : "success",
+          draggable : true,
+          position : "top-center",
+          draggableDirection : "y",
+        })
       }
 
       console.log("The res from the backend is : ", data1);
@@ -82,6 +89,7 @@ const App = () => {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-gray-900 to-black flex items-center justify-center">
+      <ToastContainer />
       <div className="w-[420px] bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl shadow-2xl p-8">
         <form
           onSubmit={handleSubmit(otpGenerator)}
